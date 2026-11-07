@@ -1,1 +1,2 @@
-﻿Console.WriteLine("Hello, World!");
+﻿App app = new App(new ConsoleUI());
+app.Run();
