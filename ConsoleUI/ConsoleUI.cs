@@ -4,11 +4,11 @@ class ConsoleUI
     {
         Console.Clear();
         Logo();
-        Console.WriteLine($"1. Boka en kund\n2. Visa kundens bokningar\n3. Ändra kundens bokning\n4. Avboka\n5. Söka lediga rum\n6. Avsluta");
+        Console.WriteLine($"1. Kund meny\n2. Sök efter lediga rum\n3. Avsluta");
         
         int input;
         Console.Write("\nVälj ett av alternativen: ");
-        while (!int.TryParse(Console.ReadLine(),out input) || input < 1 || input > 6 )
+        while (!int.TryParse(Console.ReadLine(),out input) || input < 1 || input > 3 )
         {
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.Write("Välj ett av alternativen: ");
@@ -35,6 +35,41 @@ class ConsoleUI
             input = Console.ReadLine();
         }
         return input;
+
+    }
+
+    public string ReadCustomString(string promt)
+    {
+        Console.Write(promt);
+        string? input = Console.ReadLine();
+
+        while (string.IsNullOrWhiteSpace(input) || string.IsNullOrEmpty(input))
+        {
+            Console.Write("Det får inte vara tomt");
+            input = Console.ReadLine();
+        }
+        return input;
+    }
+
+    public bool WantToCreateCustomer()
+    {
+        Console.Write("Kunden kunde inte hittas i systemet. Vill du skapa en ny kund? (Y/N): ");
+
+        string? input = Console.ReadLine()?.ToUpper();
+
+        while (input != "Y" && input != "N")
+        {
+            Console.WriteLine("Svara med Y eller N");
+            input = Console.ReadLine()?.ToUpper();
+        }
+        if (input == "Y")
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
 
     }
 }

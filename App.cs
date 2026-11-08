@@ -11,38 +11,28 @@ class App
         while (true)
         {
             int choice = _consoleUI.MainMenu();
-
-            if (choice == 1)    //Book a customer
+            
+            if (choice == 1)
             {
                 Customer? customer = await CheckIfCustomerAlreadyExistsAsync();
+
                 if (customer == null)
                 {
-                    Console.WriteLine("customer dosnt exist");
-                    Console.ReadKey();
+                    bool createCustomer = _consoleUI.WantToCreateCustomer();
+                    if (!createCustomer)
+                    {
+                        continue;
+                    }
+                    customer = await CreateNewCustomerAsync();
                 }
-                else
-                {
-                    Console.WriteLine($"Found the email! {customer.Email}");
-                    Console.ReadKey();
-                }
+                Console.WriteLine($"{customer.FirstName}. {customer.Email}");
+                Console.ReadLine();
             }
-            else if (choice == 2)   //Show customer bookings
+            else if (choice == 2)
             {
-
+                
             }
-            else if (choice == 3)   //Change customer booking
-            {
-
-            }
-            else if (choice == 4)   //Remove booking
-            {
-
-            }
-            else if (choice == 5)   //Search for empty rooms
-            {
-
-            }
-            else if (choice == 6)   //Exit
+            else if (choice == 3)
             {
                 return;
             }
@@ -54,5 +44,27 @@ class App
        string email = _consoleUI.AskForCustomerEmail();
        Customer? customer =  await _customerRepository.GetCustomerByEmailAsync(email);
        return customer;
+    }
+
+    private async Task<Customer> CreateNewCustomerAsync()
+    {
+
+        string firstName = _consoleUI.ReadCustomString("Skriv in kundens förnamn:");
+        string lastName = _consoleUI.ReadCustomString("Skriv in kundens efternamn:");
+        string email = _consoleUI.ReadCustomString("Skriv in kundens email:");
+        string phoneNumber = _consoleUI.ReadCustomString("Skriv in kundens telefon nummer:");
+
+        Customer customer = new Customer(firstName, lastName, email, phoneNumber);
+
+        int id = await _customerRepository.CreateNewCustomerAsync(customer);
+
+        customer.UpdateId(id);
+
+        return customer;
+    }
+
+    private void CustomerMenu()
+    {
+        
     }
 }
