@@ -7,14 +7,14 @@ class CustomerRepository
     public async Task<Customer?> GetCustomerByEmailAsync(string email)
     {
         await dbConnection.connection.OpenAsync();
-        using var command = new MySqlCommand("SELECT * FROM customers WHERE email = @email", dbConnection.connection);
-        command.Parameters.AddWithValue("@email", email);
-
-        await command.PrepareAsync();
-        await using var reader = await command.ExecuteReaderAsync();
-
         try
         {
+            using var command = new MySqlCommand("SELECT * FROM customers WHERE email = @email", dbConnection.connection);
+            command.Parameters.AddWithValue("@email", email);
+
+            await command.PrepareAsync();
+            await using var reader = await command.ExecuteReaderAsync();
+
             if (await reader.ReadAsync())
             {
                 return new Customer(
@@ -32,7 +32,7 @@ class CustomerRepository
         }
         finally
         {
-           await dbConnection.connection.CloseAsync();
+            await dbConnection.connection.CloseAsync();
         }
     }
 }
