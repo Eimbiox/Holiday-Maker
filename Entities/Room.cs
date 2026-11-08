@@ -1,8 +1,8 @@
 class Room
 {
-    public int id { get; private set; }
-    public string roomNumber { get; private set; }
-    public int maximumPeople { get; private set; }
-    public decimal pricePerNight { get; private set; }
-    public Accommodation accommodation { get; private set; }
+    public int Id { get; private set; }
+    public string RoomNumber { get; private set; }
+    public int MaximumPeople { get; private set; }
+    public decimal PricePerNight { get; private set; }
+    public Accommodation Accommodation { get; private set; }
 }

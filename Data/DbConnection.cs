@@ -1,5 +1,5 @@
 using MySqlConnector;
-class Connection
+class DbConnection
 { 
     public MySqlConnection connection { get; } = new MySqlConnection("Server=localhost;User ID=root;Password=kurslosenord;Database=holiday_maker"); //Should be hidden in a real program
 

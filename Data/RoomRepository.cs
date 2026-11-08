@@ -2,5 +2,5 @@ using MySqlConnector;
 
 class RoomRepository
 {
-    Connection connection = new Connection();
+    DbConnection connection = new DbConnection();
 }

@@ -2,5 +2,5 @@ using MySqlConnector;
 
 class BookingRepository
 {
-    Connection connection = new Connection();
+    DbConnection connection = new DbConnection();
 }

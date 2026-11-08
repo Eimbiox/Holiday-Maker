@@ -23,4 +23,18 @@ class ConsoleUI
         Console.WriteLine("TURBOBOKA 1997 EDITION PRO".PadLeft(38));
         Console.WriteLine(new string('=', 50));
     }
+
+    public string AskForCustomerEmail()
+    {
+        Console.Write("Skriv in kundens email: ");
+        string? input = Console.ReadLine();
+
+        while (string.IsNullOrWhiteSpace(input) || string.IsNullOrEmpty(input))
+        {
+            Console.Write("Skriv ett giltigt email");
+            input = Console.ReadLine();
+        }
+        return input;
+
+    }
 }

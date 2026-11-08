@@ -1,11 +1,11 @@
 class Booking
 {
-    public int id { get; private set; }
-    public int customerID { get; private set; }
-    public int roomId { get; private set; }
-    public DateOnly checkInDate { get; private set; }
-    public DateOnly checkOutDate { get; private set; }
-    public int numberOfPeople { get; private set; }
-    public Customer customer { get; private set; }
-    public Room room { get; private set; }
+    public int Id { get; private set; }
+    public int CustomerId { get; private set; }
+    public int RoomId { get; private set; }
+    public DateOnly CheckInDate { get; private set; }
+    public DateOnly CheckOutDate { get; private set; }
+    public int NumberOfPeople { get; private set; }
+    public Customer Customer { get; private set; }
+    public Room Room { get; private set; }
 }
