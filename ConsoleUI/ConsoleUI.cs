@@ -70,6 +70,12 @@ class ConsoleUI
         {
             return false;
         }
+    }
 
+    public void PrintMessageWithReadKey(string promt)
+    {
+        Console.WriteLine(promt);
+        Console.WriteLine("Tryck en tangent för att fortsätta...");
+        Console.ReadKey();
     }
 }

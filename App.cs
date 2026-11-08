@@ -11,7 +11,7 @@ class App
         while (true)
         {
             int choice = _consoleUI.MainMenu();
-            
+
             if (choice == 1)
             {
                 Customer? customer = await CheckIfCustomerAlreadyExistsAsync();
@@ -25,12 +25,11 @@ class App
                     }
                     customer = await CreateNewCustomerAsync();
                 }
-                Console.WriteLine($"{customer.FirstName}. {customer.Email}");
-                Console.ReadLine();
+                CustomerMenu(customer);
             }
             else if (choice == 2)
             {
-                
+
             }
             else if (choice == 3)
             {
@@ -39,19 +38,27 @@ class App
         }
     }
 
-    private async Task<Customer?> CheckIfCustomerAlreadyExistsAsync()
+    private async Task<Customer?> CheckIfCustomerAlreadyExistsAsync()   //Returns a customer based on their email
     {
-       string email = _consoleUI.AskForCustomerEmail();
-       Customer? customer =  await _customerRepository.GetCustomerByEmailAsync(email);
-       return customer;
+        string email = _consoleUI.AskForCustomerEmail();
+        Customer? customer = await _customerRepository.GetCustomerByEmailAsync(email);
+        return customer;
     }
 
-    private async Task<Customer> CreateNewCustomerAsync()
+    private async Task<Customer> CreateNewCustomerAsync()   //Creates a new customer and adds them to database
     {
 
-        string firstName = _consoleUI.ReadCustomString("Skriv in kundens förnamn:");
-        string lastName = _consoleUI.ReadCustomString("Skriv in kundens efternamn:");
-        string email = _consoleUI.ReadCustomString("Skriv in kundens email:");
+        string firstName = _consoleUI.ReadCustomString("Skriv in kundens förnamn:");    //TODO: Add saftey
+        string lastName = _consoleUI.ReadCustomString("Skriv in kundens efternamn:");   //TODO: Add saftey
+        string email = _consoleUI.ReadCustomString("Skriv in kundens email:");  //TODO: Add saftey
+        Customer? existingCustomer = await _customerRepository.GetCustomerByEmailAsync(email);
+
+        if (existingCustomer != null)  //If customer email already exists we return it and dont create a new one
+        {
+            _consoleUI.PrintMessageWithReadKey($"Kunden finns redan, använder befintlig kund");
+            return existingCustomer;
+        }
+
         string phoneNumber = _consoleUI.ReadCustomString("Skriv in kundens telefon nummer:");
 
         Customer customer = new Customer(firstName, lastName, email, phoneNumber);
@@ -63,8 +70,8 @@ class App
         return customer;
     }
 
-    private void CustomerMenu()
+    private void CustomerMenu(Customer customer)
     {
-        
+        _consoleUI.PrintMessageWithReadKey($"{customer.FirstName}. {customer.Email}");  //temp
     }
 }
