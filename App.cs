@@ -76,27 +76,53 @@ class App
 
         if (choice == 1)
         {
-            
+
         }
         else if (choice == 2)
         {
-            
+
         }
         else if (choice == 3)
         {
-            
+
         }
         else if (choice == 4)
         {
-            
+
         }
         else if (choice == 5)
         {
-            
+
         }
         else if (choice == 6)
         {
             return;
+        }
+    }
+
+    private void SearchMenu()
+    {
+        bool success = false;
+        SearchFilter searchFilter;
+
+        while (!success)
+        {
+            string location = _consoleUI.ReadCustomString("Skriv in orten: ");
+            int checkInDayDate = _consoleUI.ReadDateDay("Skriv in inchecknings datum som dag i december månad: ");
+            int checkOutDayDate = _consoleUI.ReadDateDay("Skriv in utchecknings datum som dag i december månad: ");
+            DateOnly checkInDate = new DateOnly(2026, 12, checkInDayDate);
+            DateOnly checkOutDate = new DateOnly(2026, 12, checkOutDayDate);
+            int peopleAmount = _consoleUI.ReadNotNegativeInt("Skriv in antalet personer");
+
+            try
+            {
+                searchFilter = new SearchFilter(location, checkInDate, checkOutDate, peopleAmount);
+                success = true;
+            }
+            catch (ArgumentOutOfRangeException ex)
+            {
+                _consoleUI.PrintMessageWithReadKey(ex.Message);
+            }
         }
     }
 }

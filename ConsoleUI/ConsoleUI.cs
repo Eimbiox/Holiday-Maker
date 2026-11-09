@@ -51,6 +51,29 @@ class ConsoleUI
         return input;
     }
 
+    public int ReadNotNegativeInt(string promt)
+    {
+        Console.Write(promt);
+        
+        int input;
+        while (!int.TryParse(Console.ReadLine(), out input) || input < 0)
+        {
+            Console.Write("Nummrett får inte vara negativt");
+        }
+        return input;
+    }
+
+    public int ReadDateDay(string promt)
+    {
+        Console.Write(promt);
+        int input;
+        while (!int.TryParse(Console.ReadLine(), out input) || input < 1 || input > 31)
+        {
+            Console.Write("Välj ett datum mellan 1 och 31");
+        }
+        return input;
+    }
+
     public bool WantToCreateCustomer()
     {
         Console.Write("Kunden kunde inte hittas i systemet. Vill du skapa en ny kund? (Y/N): ");
@@ -95,5 +118,10 @@ class ConsoleUI
             Console.ResetColor();
         }
         return input;
+    }
+
+    public void SearchMenu()
+    {
+        Console.Clear();
     }
 }
