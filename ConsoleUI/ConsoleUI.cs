@@ -78,4 +78,22 @@ class ConsoleUI
         Console.WriteLine("Tryck en tangent för att fortsätta...");
         Console.ReadKey();
     }
+
+    public int CustomerMenu(Customer customer)
+    {
+        Console.Clear();
+        Console.WriteLine($"AKTIV KUND: {customer.FirstName} {customer.LastName}");
+
+        Console.WriteLine($"1. Boka\n2. Avboka\n3. Ändra bokning\n4. Visa bokningar\n5. Ta bort kund\n6. ...");
+        
+        int input;
+        Console.Write("\nVälj ett av alternativen: ");
+        while (!int.TryParse(Console.ReadLine(),out input) || input < 1 || input > 6 )
+        {
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.Write("Välj ett av alternativen: ");
+            Console.ResetColor();
+        }
+        return input;
+    }
 }
