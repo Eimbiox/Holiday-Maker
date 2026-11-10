@@ -31,7 +31,6 @@ class SearchFilter
         {
             NumberOfPeople = numberOfPeople;
         }
-        
     }
 
     public void TogglePool()

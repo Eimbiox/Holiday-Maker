@@ -100,7 +100,7 @@ class App
         }
     }
 
-    private void SearchMenu()
+    private async Task SearchMenu()
     {
         bool success = false;
         SearchFilter searchFilter;
@@ -124,5 +124,6 @@ class App
                 _consoleUI.PrintMessageWithReadKey(ex.Message);
             }
         }
+
     }
 }

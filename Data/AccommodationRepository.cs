@@ -2,5 +2,5 @@ using MySqlConnector;
 
 class AccommodationRepository
 {
-    DbConnection connection = new DbConnection();
+    DbConnection DbConnection = new DbConnection();
 }
