@@ -124,4 +124,12 @@ class ConsoleUI
     {
         Console.Clear();
     }
+
+    public void PrintFreeRooms(List<Room> roomsList)
+    {
+        foreach (var room in roomsList)
+        {
+            Console.WriteLine($"{room.Accommodation.Name} {room.Accommodation.Location} {room.RoomNumber} {room.MaximumPeople} {room.PricePerNight}");
+        }
+    }
 }

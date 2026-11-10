@@ -29,7 +29,7 @@ class App
             }
             else if (choice == 2)
             {
-
+                await SearchMenu();
             }
             else if (choice == 3)
             {
@@ -102,22 +102,21 @@ class App
 
     private async Task SearchMenu()
     {
-        bool success = false;
         SearchFilter searchFilter;
 
-        while (!success)
+        while (true)
         {
             string location = _consoleUI.ReadCustomString("Skriv in orten: ");
             int checkInDayDate = _consoleUI.ReadDateDay("Skriv in inchecknings datum som dag i december månad: ");
             int checkOutDayDate = _consoleUI.ReadDateDay("Skriv in utchecknings datum som dag i december månad: ");
             DateOnly checkInDate = new DateOnly(2026, 12, checkInDayDate);
             DateOnly checkOutDate = new DateOnly(2026, 12, checkOutDayDate);
-            int peopleAmount = _consoleUI.ReadNotNegativeInt("Skriv in antalet personer");
+            int peopleAmount = _consoleUI.ReadNotNegativeInt("Skriv in antalet personer: ");
 
             try
             {
                 searchFilter = new SearchFilter(location, checkInDate, checkOutDate, peopleAmount);
-                success = true;
+                break;
             }
             catch (ArgumentOutOfRangeException ex)
             {
@@ -125,5 +124,9 @@ class App
             }
         }
 
+        List<Room> rooms = await _roomRepository.GetFreeRoomsAsync(searchFilter);
+
+        _consoleUI.PrintFreeRooms(rooms);
+        Console.ReadKey();
     }
 }

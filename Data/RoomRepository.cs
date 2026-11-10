@@ -17,14 +17,14 @@ class RoomRepository
             FROM accommodations
             JOIN rooms ON rooms.accommodation_id = accommodations.id
             WHERE accommodations.location = @location
-                AND rooms.maximum_people = @numberOfPeople
+                AND rooms.maximum_people >= @numberOfPeople
                 AND rooms.id NOT IN (
             SELECT room_id
             FROM bookings
             WHERE check_in_date < @checkOutDate
-                AND check_out_date > @checkInDate
+                AND check_out_date > @checkInDate)
             """;
-            using var command = new MySqlCommand(sql);
+            using var command = new MySqlCommand(sql, DbConnection.connection);
             command.Parameters.AddWithValue("@location", searchFilter.Location);
             command.Parameters.AddWithValue("@numberOfPeople", searchFilter.NumberOfPeople);
             command.Parameters.AddWithValue("@checkOutDate", searchFilter.CheckOutDate);
