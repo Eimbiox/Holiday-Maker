@@ -64,4 +64,65 @@ class BookingRepository
             await DbConnection.connection.CloseAsync();
         }
     }
+
+    public async Task<List<Booking>> GetBookingsByCustomerAsync(Customer customer)   //Returns all bookings that belong to the customer with room and accommodation
+    {
+        await DbConnection.connection.OpenAsync();
+        try
+        {
+            string sql = """
+                SELECT bookings.id AS booking_id, bookings.check_in_date, bookings.check_out_date, bookings.number_of_people,
+                rooms.id AS room_id, rooms.room_number, rooms.maximum_people, rooms.price_per_night,
+                accommodations.id AS accommodation_id, accommodations.name, accommodations.location, accommodations.pool,
+                accommodations.restaurant, accommodations.rating, accommodations.distance_to_beach, accommodations.distance_to_city_center
+                FROM bookings
+                JOIN rooms ON rooms.id = bookings.room_id
+                JOIN accommodations ON accommodations.id = rooms.accommodation_id
+                WHERE bookings.customer_id = @customerId
+                ORDER BY bookings.check_in_date
+                """;
+            using var command = new MySqlCommand(sql, DbConnection.connection);
+            command.Parameters.AddWithValue("@customerId", customer.Id);
+            await command.PrepareAsync();
+
+            await using var reader = await command.ExecuteReaderAsync();
+
+            List<Booking> bookings = [];
+
+            while (await reader.ReadAsync())
+            {
+                Accommodation accommodation = new Accommodation(
+                    reader.GetInt32("accommodation_id"),
+                    reader.GetString("name"),
+                    reader.GetString("location"),
+                    reader.GetBoolean("pool"),
+                    reader.GetBoolean("restaurant"),
+                    reader.GetInt32("rating"),
+                    reader.GetInt32("distance_to_beach"),
+                    reader.GetInt32("distance_to_city_center"));
+
+                Room room = new Room(
+                    reader.GetInt32("room_id"),
+                    reader.GetString("room_number"),
+                    reader.GetInt32("maximum_people"),
+                    reader.GetDecimal("price_per_night"),
+                    accommodation);
+
+                Booking booking = new Booking(
+                    customer,
+                    room,
+                    reader.GetDateOnly("check_in_date"),
+                    reader.GetDateOnly("check_out_date"),
+                    reader.GetInt32("number_of_people"),
+                    reader.GetInt32("booking_id"));
+
+                bookings.Add(booking);
+            }
+            return bookings;
+        }
+        finally
+        {
+            await DbConnection.connection.CloseAsync();
+        }
+    }
 }

@@ -169,6 +169,28 @@ class ConsoleUI
         Console.WriteLine();
     }
 
+    public void PrintBookings(Customer customer, List<Booking> bookings)
+    {
+        Console.Clear();
+        Logo();
+        Console.WriteLine($"BOKNINGAR FÖR: {customer.FirstName} {customer.LastName}\n");
+
+        if (bookings.Count == 0)
+        {
+            Console.WriteLine("Kunden har inga bokningar.\n");
+            return;
+        }
+
+        Console.WriteLine($"{"Nr",-4}{"Boknr",-7}{"Boende",-25}{"Ort",-8}{"Rum",-6}{"Datum",-25}{"Pers",-6}{"Totalpris",12}");
+        for (int i = 0; i < bookings.Count; i++)
+        {
+            Booking booking = bookings[i];
+            string dates = $"{booking.CheckInDate} - {booking.CheckOutDate}";
+            Console.WriteLine($"{i + 1,-4}{booking.Id,-7}{booking.Room.Accommodation.Name,-25}{booking.Room.Accommodation.Location,-8}{booking.Room.RoomNumber,-6}{dates,-25}{booking.NumberOfPeople,-6}{booking.GetTotalPrice(),12:0.00}");
+        }
+        Console.WriteLine();
+    }
+
     public int ReadRoomChoice(int numberOfRooms)   //Returns the Nr the user picked from the list, 0 means cancel
     {
         int input;

@@ -83,31 +83,36 @@ class App
 
     private async Task CustomerMenu(Customer customer)
     {
-        int choice = _consoleUI.CustomerMenu(customer);
+        while (true)   //Stays in the customer menu until the user picks 6
+        {
+            int choice = _consoleUI.CustomerMenu(customer);
 
-        if (choice == 1)
-        {
-            await SearchMenu(customer);
-        }
-        else if (choice == 2)
-        {
+            if (choice == 1)
+            {
+                await SearchMenu(customer);
+            }
+            else if (choice == 2)
+            {
 
-        }
-        else if (choice == 3)
-        {
+            }
+            else if (choice == 3)
+            {
 
-        }
-        else if (choice == 4)
-        {
+            }
+            else if (choice == 4)
+            {
+                List<Booking> bookings = await _bookingRepository.GetBookingsByCustomerAsync(customer);
+                _consoleUI.PrintBookings(customer, bookings);
+                _consoleUI.PrintMessageWithReadKey("");
+            }
+            else if (choice == 5)
+            {
 
-        }
-        else if (choice == 5)
-        {
-
-        }
-        else if (choice == 6)
-        {
-            return;
+            }
+            else if (choice == 6)
+            {
+                return;
+            }
         }
     }
 
