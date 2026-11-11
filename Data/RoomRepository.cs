@@ -23,7 +23,7 @@ class RoomRepository
             FROM bookings
             WHERE check_in_date < @checkOutDate
                 AND check_out_date > @checkInDate)
-            """;
+            """;    //Find free rooms and prints them out. NOT IN finds taken rooms and does not print them out. 
 
             using var command = new MySqlCommand();
 

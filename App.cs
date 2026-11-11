@@ -168,7 +168,7 @@ class App
             }
             else if (choice == 7)
             {
-                if (customer == null)   //No active customer yet, so we need one before booking
+                if (customer == null)   //No active customer yet so we need one before booking
                 {
                     customer = await GetOrCreateCustomerAsync();
                     if (customer == null)
