@@ -24,7 +24,40 @@ class RoomRepository
             WHERE check_in_date < @checkOutDate
                 AND check_out_date > @checkInDate)
             """;
-            using var command = new MySqlCommand(sql, DbConnection.connection);
+
+            using var command = new MySqlCommand();
+
+            if (searchFilter.Pool)
+            {
+                sql += " AND accommodations.pool = 1";
+            }
+            if (searchFilter.Restaurant)
+            {
+                sql += " AND accommodations.restaurant = 1";
+            }
+            if (searchFilter.MaxDistanceToSea != null)
+            {
+                sql += " AND accommodations.distance_to_beach <= @distance_to_beach";
+                command.Parameters.AddWithValue("@distance_to_beach", searchFilter.MaxDistanceToSea);
+            }
+            if (searchFilter.MaxDistanceToCityCenter != null)
+            {
+                sql += " AND accommodations.distance_to_city_center <= @distance_to_city_center";
+                command.Parameters.AddWithValue("@distance_to_city_center", searchFilter.MaxDistanceToCityCenter);
+            }
+            if (searchFilter.SortOption == SortOption.Price)
+            {
+                sql += " ORDER BY rooms.price_per_night ASC";
+            }
+            else if (searchFilter.SortOption == SortOption.Rating)
+            {
+                sql += " ORDER BY accommodations.rating DESC";
+            }
+
+
+            command.CommandText = sql;
+            command.Connection = DbConnection.connection;
+
             command.Parameters.AddWithValue("@location", searchFilter.Location);
             command.Parameters.AddWithValue("@numberOfPeople", searchFilter.NumberOfPeople);
             command.Parameters.AddWithValue("@checkOutDate", searchFilter.CheckOutDate);
@@ -53,7 +86,7 @@ class RoomRepository
                     reader.GetInt32("maximum_people"),
                     reader.GetDecimal("price_per_night"),
                     accommodation);
-                
+
                 rooms.Add(room);
             }
             return rooms;
