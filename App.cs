@@ -168,6 +168,19 @@ class App
             }
             else if (choice == 7)
             {
+                if (rooms.Count == 0)
+                {
+                    _consoleUI.PrintMessageWithReadKey("Det finns inga lediga rum att boka.");
+                    continue;
+                }
+
+                int roomChoice = _consoleUI.ReadRoomChoice(rooms.Count);
+                if (roomChoice == 0)
+                {
+                    continue;
+                }
+                Room room = rooms[roomChoice - 1];   //The list starts at 0 but the Nr shown starts at 1
+
                 if (customer == null)   //No active customer yet so we need one before booking
                 {
                     customer = await GetOrCreateCustomerAsync();
@@ -176,7 +189,20 @@ class App
                         continue;
                     }
                 }
-                // TODO: Välj rum och boka det på customer
+
+                bool isFree = await _bookingRepository.IsRoomFreeAsync(room.Id, searchFilter.CheckInDate, searchFilter.CheckOutDate);
+                if (!isFree)   //Someone else booked the room after the search was made
+                {
+                    _consoleUI.PrintMessageWithReadKey("Rummet har precis blivit bokat av någon annan. Välj ett annat rum.");
+                    continue;
+                }
+
+                Booking booking = new Booking(customer, room, searchFilter.CheckInDate, searchFilter.CheckOutDate, searchFilter.NumberOfPeople);
+                int bookingId = await _bookingRepository.CreateBookingAsync(booking);
+                booking.UpdateId(bookingId);
+
+                _consoleUI.PrintBookingConfirmation(booking);
+                return;
             }
             else if (choice == 0)
             {

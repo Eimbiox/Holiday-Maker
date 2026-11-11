@@ -168,4 +168,34 @@ class ConsoleUI
         }
         Console.WriteLine();
     }
+
+    public int ReadRoomChoice(int numberOfRooms)   //Returns the Nr the user picked from the list, 0 means cancel
+    {
+        int input;
+        Console.Write($"Välj rum (Nr 1-{numberOfRooms}), 0 för att avbryta: ");
+        while (!int.TryParse(Console.ReadLine(), out input) || input < 0 || input > numberOfRooms)
+        {
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.Write($"Välj ett nummer mellan 0 och {numberOfRooms}: ");
+            Console.ResetColor();
+        }
+        return input;
+    }
+
+    public void PrintBookingConfirmation(Booking booking)
+    {
+        Console.Clear();
+        Logo();
+        Console.WriteLine("BOKNINGSBEKRÄFTELSE\n");
+        Console.WriteLine($"Bokningsnummer: {booking.Id}");
+        Console.WriteLine($"Kund:           {booking.Customer.FirstName} {booking.Customer.LastName}");
+        Console.WriteLine($"Boende:         {booking.Room.Accommodation.Name}, {booking.Room.Accommodation.Location}");
+        Console.WriteLine($"Rum:            {booking.Room.RoomNumber}");
+        Console.WriteLine($"Datum:          {booking.CheckInDate} - {booking.CheckOutDate}");
+        Console.WriteLine($"Antal nätter:   {booking.GetNumberOfNights()}");
+        Console.WriteLine($"Antal personer: {booking.NumberOfPeople}");
+        Console.WriteLine($"Totalpris:      {booking.GetTotalPrice():0.00} kr");
+        Console.WriteLine();
+        PrintMessageWithReadKey("Bokningen är sparad.");
+    }
 }

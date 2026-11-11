@@ -26,9 +26,13 @@ class Booking
         Id = id;
     }
 
+    public int GetNumberOfNights()   //The check out day does not count as a night
+    {
+        return CheckOutDate.DayNumber - CheckInDate.DayNumber;
+    }
+
     public decimal GetTotalPrice()   //Number of nights times the price per night
     {
-        int nights = CheckOutDate.DayNumber - CheckInDate.DayNumber;
-        return nights * Room.PricePerNight;
+        return GetNumberOfNights() * Room.PricePerNight;
     }
 }
