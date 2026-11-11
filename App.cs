@@ -20,11 +20,11 @@ class App
                 {
                     continue;
                 }
-                await CustomerMenu(customer);
+                await CustomerMenuAsync(customer);
             }
             else if (choice == 2)
             {
-                await SearchMenu(null);
+                await SearchMenuAsync(null);
             }
             else if (choice == 3)
             {
@@ -81,7 +81,7 @@ class App
         return customer;
     }
 
-    private async Task CustomerMenu(Customer customer)
+    private async Task CustomerMenuAsync(Customer customer)
     {
         while (true)   //Stays in the customer menu until the user picks 6
         {
@@ -89,10 +89,29 @@ class App
 
             if (choice == 1)
             {
-                await SearchMenu(customer);
+                await SearchMenuAsync(customer);
             }
             else if (choice == 2)
             {
+                List<Booking> bookings = await _bookingRepository.GetBookingsByCustomerAsync(customer);
+                int bookingChoice = _consoleUI.ReadBookingToRemove(customer, bookings);   //The Nr shown on screen, not the real id
+
+                if (bookingChoice == 0)   //0 means cancel 
+                {
+                    continue;
+                }
+
+                Booking booking = bookings[bookingChoice - 1];   //Nr 1 is in slot [0] in the list
+                bool removedBooking = await _bookingRepository.RemoveBookingAsync(booking.Id);
+
+                if (removedBooking)
+                {
+                    _consoleUI.PrintMessageWithReadKey($"Bokning {booking.Id} har tagits bort från {customer.FirstName}");
+                }
+                else
+                {
+                    _consoleUI.PrintMessageWithReadKey("Något gick fel, testa igen senare");
+                }
 
             }
             else if (choice == 3)
@@ -116,7 +135,7 @@ class App
         }
     }
 
-    private async Task SearchMenu(Customer? customer)   //customer is null when searching from the main menu
+    private async Task SearchMenuAsync(Customer? customer)   //customer is null when searching from the main menu
     {
         SearchFilter searchFilter;
 

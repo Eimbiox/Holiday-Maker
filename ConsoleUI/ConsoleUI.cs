@@ -191,6 +191,27 @@ class ConsoleUI
         Console.WriteLine();
     }
 
+    public int ReadBookingToRemove(Customer customer, List<Booking> bookings)   //Shows the bookings and returns the Nr the user wants to remove 0 means cancel
+    {
+        PrintBookings(customer, bookings);
+
+        if (bookings.Count == 0)
+        {
+            PrintMessageWithReadKey("");   //So the user has time to read "Kunden har inga bokningar"
+            return 0;
+        }
+
+        int input;
+        Console.Write($"Välj bokning att avboka (Nr 1-{bookings.Count}), 0 för att avbryta: ");
+        while (!int.TryParse(Console.ReadLine(), out input) || input < 0 || input > bookings.Count)
+        {
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.Write($"Välj ett nummer mellan 0 och {bookings.Count}: ");
+            Console.ResetColor();
+        }
+        return input;
+    }
+
     public int ReadRoomChoice(int numberOfRooms)   //Returns the Nr the user picked from the list, 0 means cancel
     {
         int input;

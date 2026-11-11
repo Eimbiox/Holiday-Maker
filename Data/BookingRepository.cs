@@ -125,4 +125,26 @@ class BookingRepository
             await DbConnection.connection.CloseAsync();
         }
     }
+
+    public async Task<bool> RemoveBookingAsync(int bookingID)    //Returns true if there was a row(booking) that was removed
+    {
+        await DbConnection.connection.OpenAsync();
+        try
+        {
+            string sql = """
+            DELETE FROM bookings WHERE bookings.id = @bookingID
+            """;
+            using var command = new MySqlCommand(sql, DbConnection.connection);
+            command.Parameters.AddWithValue("@bookingID", bookingID);
+            await command.PrepareAsync();
+
+            int rowsAffected = await command.ExecuteNonQueryAsync();
+            return rowsAffected > 0;
+
+        }
+        finally
+        {
+            await DbConnection.connection.CloseAsync();
+        }
+    }
 }
