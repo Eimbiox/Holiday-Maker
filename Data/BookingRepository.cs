@@ -147,4 +147,30 @@ class BookingRepository
             await DbConnection.connection.CloseAsync();
         }
     }
+
+    public async Task<bool> UpdateAmountOfPeopleInBookingAsync(int bookingID, int peopleAmount)
+    {
+        await DbConnection.connection.OpenAsync();
+        try
+        {
+            string sql = """
+            UPDATE bookings SET number_of_people = @peopleAmount  WHERE bookings.id = @bookingID
+            """;
+
+            using var command = new MySqlCommand(sql, DbConnection.connection);
+            command.Parameters.AddWithValue("peopleAmount", peopleAmount);
+            command.Parameters.AddWithValue("@bookingID", bookingID);
+            await command.PrepareAsync();
+
+            int rowsAffected = await command.ExecuteNonQueryAsync();
+            return rowsAffected > 0;
+        }
+        finally
+        {
+            await DbConnection.connection.CloseAsync();
+        }
+    }
+    
+        
+    
 }

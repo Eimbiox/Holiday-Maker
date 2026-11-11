@@ -83,7 +83,7 @@ class App
 
     private async Task CustomerMenuAsync(Customer customer)
     {
-        while (true)   //Stays in the customer menu until the user picks 6
+        while (true)   //Stays in the customer menu until the user picks 5
         {
             int choice = _consoleUI.CustomerMenu(customer);
 
@@ -94,7 +94,7 @@ class App
             else if (choice == 2)
             {
                 List<Booking> bookings = await _bookingRepository.GetBookingsByCustomerAsync(customer);
-                int bookingChoice = _consoleUI.ReadBookingToRemove(customer, bookings);   //The Nr shown on screen, not the real id
+                int bookingChoice = _consoleUI.ReadBookingChoice(customer, bookings, "avboka");   //The Nr shown on screen, not the real id
 
                 if (bookingChoice == 0)   //0 means cancel 
                 {
@@ -116,7 +116,26 @@ class App
             }
             else if (choice == 3)
             {
+                List<Booking> bookings = await _bookingRepository.GetBookingsByCustomerAsync(customer);
+                int bookingChoice = _consoleUI.ReadBookingChoice(customer, bookings, "ändra");   //The Nr shown on screen, not the real id
 
+                if (bookingChoice == 0)   //0 means cancel
+                {
+                    continue;
+                }
+
+                Booking booking = bookings[bookingChoice - 1];   //Nr 1 is in slot [0] in the list
+                int newNumberOfPeople = _consoleUI.ReadNewNumberOfPeople(booking.Room.MaximumPeople);   //Can never be more than the room allows
+                bool updatedBooking = await _bookingRepository.UpdateAmountOfPeopleInBookingAsync(booking.Id, newNumberOfPeople);
+
+                if (updatedBooking)
+                {
+                    _consoleUI.PrintMessageWithReadKey($"Bokning {booking.Id} har nu {newNumberOfPeople} personer");
+                }
+                else
+                {
+                    _consoleUI.PrintMessageWithReadKey("Bokningen fanns inte längre, den kan ha avbokats");
+                }
             }
             else if (choice == 4)
             {
@@ -125,10 +144,6 @@ class App
                 _consoleUI.PrintMessageWithReadKey("");
             }
             else if (choice == 5)
-            {
-
-            }
-            else if (choice == 6)
             {
                 return;
             }

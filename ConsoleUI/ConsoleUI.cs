@@ -107,11 +107,11 @@ class ConsoleUI
         Console.Clear();
         Console.WriteLine($"AKTIV KUND: {customer.FirstName} {customer.LastName}");
 
-        Console.WriteLine($"1. Boka\n2. Avboka\n3. Ändra bokning\n4. Visa bokningar\n5. Ta bort kund\n6. ...");
+        Console.WriteLine($"1. Boka\n2. Avboka\n3. Ändra bokning\n4. Visa bokningar\n5. Tillbaka");
         
         int input;
         Console.Write("\nVälj ett av alternativen: ");
-        while (!int.TryParse(Console.ReadLine(),out input) || input < 1 || input > 6 )
+        while (!int.TryParse(Console.ReadLine(),out input) || input < 1 || input > 5 )
         {
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.Write("Välj ett av alternativen: ");
@@ -191,7 +191,7 @@ class ConsoleUI
         Console.WriteLine();
     }
 
-    public int ReadBookingToRemove(Customer customer, List<Booking> bookings)   //Shows the bookings and returns the Nr the user wants to remove 0 means cancel
+    public int ReadBookingChoice(Customer customer, List<Booking> bookings, string action)   //Shows the bookings and returns the Nr the user picked, 0 means cancel. action is e.g. "avboka" or "ändra"
     {
         PrintBookings(customer, bookings);
 
@@ -202,11 +202,24 @@ class ConsoleUI
         }
 
         int input;
-        Console.Write($"Välj bokning att avboka (Nr 1-{bookings.Count}), 0 för att avbryta: ");
+        Console.Write($"Välj bokning att {action} (Nr 1-{bookings.Count}), 0 för att avbryta: ");
         while (!int.TryParse(Console.ReadLine(), out input) || input < 0 || input > bookings.Count)
         {
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.Write($"Välj ett nummer mellan 0 och {bookings.Count}: ");
+            Console.ResetColor();
+        }
+        return input;
+    }
+
+    public int ReadNewNumberOfPeople(int maximumPeople)   //Only allows 1 up to the room's maximum
+    {
+        int input;
+        Console.Write($"Nytt antal personer (1-{maximumPeople}): ");
+        while (!int.TryParse(Console.ReadLine(), out input) || input < 1 || input > maximumPeople)
+        {
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.Write($"Rummet tar 1-{maximumPeople} personer, försök igen: ");
             Console.ResetColor();
         }
         return input;
