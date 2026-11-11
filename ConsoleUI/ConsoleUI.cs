@@ -120,16 +120,52 @@ class ConsoleUI
         return input;
     }
 
-    public void SearchMenu()
+    public int SearchMenu(SearchFilter searchFilter, List<Room> roomsList)
     {
         Console.Clear();
+        Logo();
+
+        Console.WriteLine($"Sökning: {searchFilter.Location}, {searchFilter.CheckInDate} - {searchFilter.CheckOutDate}, {searchFilter.NumberOfPeople} personer\n");
+
+        PrintFreeRooms(roomsList);
+
+        string pool = searchFilter.Pool ? "PÅ" : "AV";
+        string restaurant = searchFilter.Restaurant ? "PÅ" : "AV";
+        string maxSea = searchFilter.MaxDistanceToSea == null ? "Inget" : $"{searchFilter.MaxDistanceToSea} m";
+        string maxCityCenter = searchFilter.MaxDistanceToCityCenter == null ? "Inget" : $"{searchFilter.MaxDistanceToCityCenter} m";
+
+        Console.WriteLine(new string('-', 50));
+        Console.WriteLine($"{$"1. Pool: {pool}",-40}2. Restaurang: {restaurant}");
+        Console.WriteLine($"{$"3. Max avstånd till strand: {maxSea}",-40}4. Max avstånd till centrum: {maxCityCenter}");
+        Console.WriteLine($"{"5. Sortera på pris (lägst först)",-40}6. Sortera på betyg (högst först)");
+        Console.WriteLine($"{"7. Boka ett rum",-40}0. Tillbaka");
+        Console.WriteLine($"\nAktiv sortering: {searchFilter.SortOption}");
+
+        int input;
+        Console.Write("\nVälj ett av alternativen: ");
+        while (!int.TryParse(Console.ReadLine(), out input) || input < 0 || input > 7)
+        {
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.Write("Välj ett av alternativen: ");
+            Console.ResetColor();
+        }
+        return input;
     }
 
-    public void PrintFreeRooms(List<Room> roomsList)
+    private void PrintFreeRooms(List<Room> roomsList)
     {
-        foreach (var room in roomsList)
+        if (roomsList.Count == 0)
         {
-            Console.WriteLine($"{room.Accommodation.Name} {room.Accommodation.Location} {room.RoomNumber} {room.MaximumPeople} {room.PricePerNight}");
+            Console.WriteLine("Inga lediga rum hittades.\n");
+            return;
         }
+
+        Console.WriteLine($"{"Nr",-4}{"Boende",-25}{"Ort",-8}{"Rum",-6}{"Pers",-6}{"Betyg",-7}{"Pris/natt",10}");
+        for (int i = 0; i < roomsList.Count; i++)
+        {
+            Room room = roomsList[i];
+            Console.WriteLine($"{i + 1,-4}{room.Accommodation.Name,-25}{room.Accommodation.Location,-8}{room.RoomNumber,-6}{room.MaximumPeople,-6}{room.Accommodation.Rating,-7}{room.PricePerNight,10:0.00}");
+        }
+        Console.WriteLine();
     }
 }

@@ -6,7 +6,7 @@ class App
     private CustomerRepository _customerRepository = new CustomerRepository();
     private RoomRepository _roomRepository = new RoomRepository();
 
-    public async Task RunAsync()
+    public async Task RunAsync()    //Runs the program and calls the methods needed
     {
         while (true)
         {
@@ -14,28 +14,39 @@ class App
 
             if (choice == 1)
             {
-                Customer? customer = await CheckIfCustomerAlreadyExistsAsync();
+                Customer? customer = await GetOrCreateCustomerAsync();
 
                 if (customer == null)
                 {
-                    bool createCustomer = _consoleUI.WantToCreateCustomer();
-                    if (!createCustomer)
-                    {
-                        continue;
-                    }
-                    customer = await CreateNewCustomerAsync();
+                    continue;
                 }
-                CustomerMenu(customer);
+                await CustomerMenu(customer);
             }
             else if (choice == 2)
             {
-                await SearchMenu();
+                await SearchMenu(null);
             }
             else if (choice == 3)
             {
                 return;
             }
         }
+    }
+
+    private async Task<Customer?> GetOrCreateCustomerAsync()   //Finds the customer by email, or offers to create one. Returns null if the user declines
+    {
+        Customer? customer = await CheckIfCustomerAlreadyExistsAsync();
+
+        if (customer == null)
+        {
+            bool createCustomer = _consoleUI.WantToCreateCustomer();
+            if (!createCustomer)
+            {
+                return null;
+            }
+            customer = await CreateNewCustomerAsync();
+        }
+        return customer;
     }
 
     private async Task<Customer?> CheckIfCustomerAlreadyExistsAsync()   //Returns a customer based on their email
@@ -70,13 +81,13 @@ class App
         return customer;
     }
 
-    private void CustomerMenu(Customer customer)
+    private async Task CustomerMenu(Customer customer)
     {
         int choice = _consoleUI.CustomerMenu(customer);
 
         if (choice == 1)
         {
-
+            await SearchMenu(customer);
         }
         else if (choice == 2)
         {
@@ -100,7 +111,7 @@ class App
         }
     }
 
-    private async Task SearchMenu()
+    private async Task SearchMenu(Customer? customer)   //customer is null when searching from the main menu
     {
         SearchFilter searchFilter;
 
@@ -124,9 +135,53 @@ class App
             }
         }
 
-        List<Room> rooms = await _roomRepository.GetFreeRoomsAsync(searchFilter);
+        while (true)
+        {
+            List<Room> rooms = await _roomRepository.GetFreeRoomsAsync(searchFilter);
 
-        _consoleUI.PrintFreeRooms(rooms);
-        Console.ReadKey();
+            int choice = _consoleUI.SearchMenu(searchFilter, rooms);
+            if (choice == 1)
+            {
+                searchFilter.TogglePool();
+            }
+            else if (choice == 2)
+            {
+                searchFilter.ToggleRestaurant();
+            }
+            else if (choice == 3)
+            {
+                int distance = _consoleUI.ReadNotNegativeInt("Max avstånd till strand i meter (0 = inget filter): ");
+                searchFilter.SetMaxDistanceToSea(distance);
+            }
+            else if (choice == 4)
+            {
+                int distance = _consoleUI.ReadNotNegativeInt("Max avstånd till centrum i meter (0 = inget filter): ");
+                searchFilter.SetMaxDistanceToCityCenter(distance);
+            }
+            else if (choice == 5)
+            {
+                searchFilter.SetSortOption(SortOption.Price);
+            }
+            else if (choice == 6)
+            {
+                searchFilter.SetSortOption(SortOption.Rating);
+            }
+            else if (choice == 7)
+            {
+                if (customer == null)   //No active customer yet, so we need one before booking
+                {
+                    customer = await GetOrCreateCustomerAsync();
+                    if (customer == null)
+                    {
+                        continue;
+                    }
+                }
+                // TODO: Välj rum och boka det på customer
+            }
+            else if (choice == 0)
+            {
+                return;
+            }
+        }
     }
 }
