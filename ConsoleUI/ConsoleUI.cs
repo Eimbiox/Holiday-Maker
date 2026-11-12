@@ -99,6 +99,38 @@ class ConsoleUI
         }
     }
 
+    public string ReadPhoneNumber(string promt)   //Swedish phonenumber starts with 07 and has exactly 10 digits
+    {
+        Console.Write(promt);
+
+        while (true)
+        {
+            string? input = Console.ReadLine()?.Trim();
+            bool isValid = !string.IsNullOrEmpty(input) && input.Length == 10 && input.StartsWith("0");
+
+            if (isValid)
+            {
+                foreach (char c in input!)
+                {
+                    if (!char.IsDigit(c))   //Only digits are allowed
+                    {
+                        isValid = false;
+                        break;
+                    }
+                }
+            }
+
+            if (isValid)
+            {
+                return input!;
+            }
+
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.Write("Telefonnumret måste börja på 0 och ha 10 siffror, t.ex. 0701234567:");
+            Console.ResetColor();
+        }
+    }
+
     public int ReadNotNegativeInt(string promt)
     {
         Console.Write(promt);

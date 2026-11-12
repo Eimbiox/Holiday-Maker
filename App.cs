@@ -1,7 +1,6 @@
 class App
 {
     private ConsoleUI _consoleUI = new ConsoleUI();
-    private AccommodationRepository _accommodationRepository = new AccommodationRepository();
     private BookingRepository _bookingRepository = new BookingRepository();
     private CustomerRepository _customerRepository = new CustomerRepository();
     private RoomRepository _roomRepository = new RoomRepository();
@@ -51,7 +50,7 @@ class App
 
     private async Task<Customer?> CheckIfCustomerAlreadyExistsAsync()   //Returns a customer based on their email
     {
-        string email = _consoleUI.ReadEmail("Skriv in kundens email");
+        string email = _consoleUI.ReadEmail("Skriv in kundens email: ");
         Customer? customer = await _customerRepository.GetCustomerByEmailAsync(email);
         return customer;
     }
@@ -59,9 +58,9 @@ class App
     private async Task<Customer> CreateNewCustomerAsync()   //Creates a new customer and adds them to database
     {
 
-        string firstName = _consoleUI.ReadName("Skriv in kundens förnamn");  
-        string lastName = _consoleUI.ReadName("Skriv in kundens efternamn");
-        string email = _consoleUI.ReadEmail("Skriv in kundens email");
+        string firstName = _consoleUI.ReadName("Skriv in kundens förnamn: ");  
+        string lastName = _consoleUI.ReadName("Skriv in kundens efternamn: ");
+        string email = _consoleUI.ReadEmail("Skriv in kundens email: ");
         Customer? existingCustomer = await _customerRepository.GetCustomerByEmailAsync(email);
 
         if (existingCustomer != null)  //If customer email already exists we return it and dont create a new one
@@ -70,7 +69,7 @@ class App
             return existingCustomer;
         }
 
-        string phoneNumber = _consoleUI.ReadCustomString("Skriv in kundens telefon nummer:");
+        string phoneNumber = _consoleUI.ReadPhoneNumber("Skriv in kundens telefonnummer(börja med 0): ");
 
         Customer customer = new Customer(firstName, lastName, email, phoneNumber);
 
