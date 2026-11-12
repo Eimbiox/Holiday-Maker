@@ -1,3 +1,5 @@
+using MySqlConnector;
+
 class App
 {
     private ConsoleUI _consoleUI = new ConsoleUI();
@@ -11,23 +13,30 @@ class App
         {
             int choice = _consoleUI.MainMenu();
 
-            if (choice == 1)
+            try   //Catches database errors from anywhere in the program so it does not crash
             {
-                Customer? customer = await GetOrCreateCustomerAsync();
-
-                if (customer == null)
+                if (choice == 1)
                 {
-                    continue;
+                    Customer? customer = await GetOrCreateCustomerAsync();
+
+                    if (customer == null)
+                    {
+                        continue;
+                    }
+                    await CustomerMenuAsync(customer);
                 }
-                await CustomerMenuAsync(customer);
+                else if (choice == 2)
+                {
+                    await SearchMenuAsync(null);
+                }
+                else if (choice == 3)
+                {
+                    return;
+                }
             }
-            else if (choice == 2)
+            catch (MySqlException)
             {
-                await SearchMenuAsync(null);
-            }
-            else if (choice == 3)
-            {
-                return;
+                _consoleUI.PrintErrorWithReadKey("Kunde inte nå databasen. Kontrollera att databasen är igång och försök igen.");
             }
         }
     }

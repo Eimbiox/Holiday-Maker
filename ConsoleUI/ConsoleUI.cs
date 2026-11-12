@@ -175,6 +175,15 @@ class ConsoleUI
         }
     }
 
+    public void PrintErrorWithReadKey(string promt)   //Same as PrintMessageWithReadKey but the message is red
+    {
+        Console.ForegroundColor = ConsoleColor.Red;
+        Console.WriteLine(promt);
+        Console.ResetColor();
+        Console.WriteLine("Tryck en tangent för att fortsätta...");
+        Console.ReadKey();
+    }
+
     public void PrintMessageWithReadKey(string promt)
     {
         Console.WriteLine(promt);
