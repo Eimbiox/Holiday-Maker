@@ -2,6 +2,10 @@
 
 Ett konsolprogram i C# för att boka boenden. Programmet använder en MySQL-databas för kunder, boenden, rum och bokningar.
 
+## ER-diagram
+
+![ER-diagram](docs/ER%20Diagram.jpg)
+
 ## Krav
 
 - [.NET 10 SDK](https://dotnet.microsoft.com/download)
