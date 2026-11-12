@@ -51,6 +51,38 @@ class ConsoleUI
         return input;
     }
 
+    public string ReadName(string promt)   //Only letters
+    {
+        Console.Write(promt);
+
+        while (true)
+        {
+            string? input = Console.ReadLine()?.Trim();
+            bool isValid = !string.IsNullOrWhiteSpace(input) && input.Length <= 255;
+
+            if (isValid)
+            {
+                foreach (char c in input!)
+                {
+                    if (!char.IsLetter(c) && c != '-' && c != ' ')   //A character that is not a letter, hyphen or space is not allowed
+                    {
+                        isValid = false;
+                        break;
+                    }
+                }
+            }
+
+            if (isValid)
+            {
+                return input!;
+            }
+
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.Write("Namnet får bara innehålla bokstäver, bindestreck och mellanslag: ");
+            Console.ResetColor();
+        }
+    }
+
     public int ReadNotNegativeInt(string promt)
     {
         Console.Write(promt);

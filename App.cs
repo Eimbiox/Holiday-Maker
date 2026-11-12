@@ -59,8 +59,8 @@ class App
     private async Task<Customer> CreateNewCustomerAsync()   //Creates a new customer and adds them to database
     {
 
-        string firstName = _consoleUI.ReadCustomString("Skriv in kundens förnamn:");    //TODO: Add saftey
-        string lastName = _consoleUI.ReadCustomString("Skriv in kundens efternamn:");   //TODO: Add saftey
+        string firstName = _consoleUI.ReadName("Skriv in kundens förnamn");  
+        string lastName = _consoleUI.ReadName("Skriv in kundens efternamn");
         string email = _consoleUI.ReadCustomString("Skriv in kundens email:");  //TODO: Add saftey
         Customer? existingCustomer = await _customerRepository.GetCustomerByEmailAsync(email);
 
