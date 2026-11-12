@@ -24,20 +24,6 @@ class ConsoleUI
         Console.WriteLine(new string('=', 50));
     }
 
-    public string AskForCustomerEmail()
-    {
-        Console.Write("Skriv in kundens email: ");
-        string? input = Console.ReadLine();
-
-        while (string.IsNullOrWhiteSpace(input) || string.IsNullOrEmpty(input))
-        {
-            Console.Write("Skriv ett giltigt email");
-            input = Console.ReadLine();
-        }
-        return input;
-
-    }
-
     public string ReadCustomString(string promt)
     {
         Console.Write(promt);
@@ -79,6 +65,36 @@ class ConsoleUI
 
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.Write("Namnet får bara innehålla bokstäver, bindestreck och mellanslag: ");
+            Console.ResetColor();
+        }
+    }
+
+    public string ReadEmail(string promt)   //Must look like name@domain.se
+    {
+        Console.Write(promt);
+
+        while (true)
+        {
+            string? input = Console.ReadLine()?.Trim();
+
+            if (!string.IsNullOrWhiteSpace(input) && input.Length <= 255 && !input.Contains(' '))
+            {
+                int atIndex = input.IndexOf('@');          //-1 if there is no @
+                int lastDotIndex = input.LastIndexOf('.');
+
+                bool somethingBeforeAt = atIndex > 0;
+                bool onlyOneAt = atIndex == input.LastIndexOf('@');
+                bool dotAfterAt = lastDotIndex > atIndex + 1;              //There must be something between @ and the dot
+                bool somethingAfterDot = lastDotIndex < input.Length - 1;
+
+                if (somethingBeforeAt && onlyOneAt && dotAfterAt && somethingAfterDot)
+                {
+                    return input;
+                }
+            }
+
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.Write("Skriv en giltig email, t.ex. anna@exempel.se: ");
             Console.ResetColor();
         }
     }

@@ -51,7 +51,7 @@ class App
 
     private async Task<Customer?> CheckIfCustomerAlreadyExistsAsync()   //Returns a customer based on their email
     {
-        string email = _consoleUI.AskForCustomerEmail();
+        string email = _consoleUI.ReadEmail("Skriv in kundens email");
         Customer? customer = await _customerRepository.GetCustomerByEmailAsync(email);
         return customer;
     }
@@ -61,7 +61,7 @@ class App
 
         string firstName = _consoleUI.ReadName("Skriv in kundens förnamn");  
         string lastName = _consoleUI.ReadName("Skriv in kundens efternamn");
-        string email = _consoleUI.ReadCustomString("Skriv in kundens email:");  //TODO: Add saftey
+        string email = _consoleUI.ReadEmail("Skriv in kundens email");
         Customer? existingCustomer = await _customerRepository.GetCustomerByEmailAsync(email);
 
         if (existingCustomer != null)  //If customer email already exists we return it and dont create a new one
