@@ -68,7 +68,7 @@ class SearchFilter
 
     public void SetMaxDistanceToCityCenter(int distance)
     {
-        if (distance <= 0)
+        if (distance < 0)
         {
             return;
         }

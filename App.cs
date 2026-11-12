@@ -164,7 +164,7 @@ class App
 
         while (true)
         {
-            string location = _consoleUI.ReadCustomString("Skriv in orten: ");
+            string location = _consoleUI.ReadLocation("Skriv in orten: ");
             int checkInDayDate = _consoleUI.ReadDateDay("Skriv in inchecknings datum som dag i december månad: ");
             int checkOutDayDate = _consoleUI.ReadDateDay("Skriv in utchecknings datum som dag i december månad: ");
             DateOnly checkInDate = new DateOnly(2026, 12, checkInDayDate);

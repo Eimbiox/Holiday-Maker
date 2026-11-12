@@ -69,6 +69,19 @@ class ConsoleUI
         }
     }
 
+    public string ReadLocation(string promt)   //Reads a trimmed string that is not empty
+    {
+        Console.Write(promt);
+        string? input = Console.ReadLine()?.Trim();
+
+        while (string.IsNullOrEmpty(input))
+        {
+            Console.Write("Orten får inte vara tom: ");
+            input = Console.ReadLine()?.Trim();
+        }
+        return input;
+    }
+
     public string ReadEmail(string promt)   //Must look like name@domain.se
     {
         Console.Write(promt);
