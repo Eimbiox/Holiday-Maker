@@ -36,7 +36,7 @@ class App
             }
             catch (MySqlException)
             {
-                _consoleUI.PrintErrorWithReadKey("Kunde inte nå databasen. Kontrollera att databasen är igång och försök igen.");
+                _consoleUI.PrintErrorWithReadKey("Något gick fel med databasen. Försök igen.");
             }
         }
     }
